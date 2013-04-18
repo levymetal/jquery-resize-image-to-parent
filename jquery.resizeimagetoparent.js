@@ -50,7 +50,7 @@ jQuery.fn.resizeToParent = function(options) {
       var leftOffset = (imageWidth - parentWidth) / -2;
       var topOffset = (imageHeight - parentHeight) / -2;
 
-      obj.css({'left': leftOffset, 'top': topOffset});
+      obj.css({'margin-left': leftOffset, 'margin-top': topOffset});
     });
 
     // force ie to run the load function if the image is cached
