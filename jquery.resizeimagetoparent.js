@@ -3,25 +3,25 @@
  *
  * Author: Christian Varga
  * Author URI: http://christianvarga.com
+ * Plugin Source: https://github.com/levymetal/jquery-resize-image-to-parent/
  *
  */
 
-jQuery.fn.resizeToParent = function(options) {
-  var defaults = {
-   parent: 'div'
-  }
+(function($) {
+  $.fn.resizeToParent = function(opts) {
+    var defaults = {
+     parent: 'div'
+    }
 
-  var options = jQuery.extend(defaults, options);
+    var opts = $.extend(defaults, opts);
 
-  return this.each(function() {
-    var o = options;
-    var obj = jQuery(this);
+    function positionImage(obj) {
+      // reset image (in case we're calling this a second time, for example on resize)
+      obj.css({'width': '', 'height': '', 'margin-left': '', 'margin-top': ''});
 
-    // bind to load of image
-    obj.load(function() {
       // dimensions of the parent
-      var parentWidth = obj.parents(o.parent).width();
-      var parentHeight = obj.parents(o.parent).height();
+      var parentWidth = obj.parents(opts.parent).width();
+      var parentHeight = obj.parents(opts.parent).height();
 
       // dimensions of the image
       var imageWidth = obj.width();
@@ -51,11 +51,29 @@ jQuery.fn.resizeToParent = function(options) {
       var topOffset = (imageHeight - parentHeight) / -2;
 
       obj.css({'margin-left': leftOffset, 'margin-top': topOffset});
-    });
-
-    // force ie to run the load function if the image is cached
-    if (this.complete) {
-      obj.trigger('load');
     }
-  });
-}
+
+    return this.each(function() {
+      var obj = $(this);
+
+      // hack to force ie to run the load function... ridiculous bug 
+      // http://stackoverflow.com/questions/7137737/ie9-problems-with-jquery-load-event-not-firing
+      obj.attr("src", obj.attr("src"));
+
+      // bind to load of image
+      obj.load(function() {
+        positionImage(obj);
+      });
+
+      // run the position function if the image is cached
+      if (this.complete) {
+        positionImage(obj);
+      }
+
+      // run the position function on window resize (to make it responsive)
+      $(window).on('resize', function() {
+        positionImage(obj);
+      });
+    });
+  }
+})( jQuery );

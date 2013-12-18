@@ -1,131 +1,150 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<style type="text/css">
-		#content {
-			width: 100%;
-		}
-		
-		#wideContainer {
-			position: relative;
-			margin: 20px auto;
-			width: 600px;
-			height: 200px;
-			overflow: hidden;
-			border: 10px solid black;
-		}
-		
-		#tallContainer {
-			position: relative;
-			margin: 50px auto;
-			width: 200px;
-			height: 400px;
-			overflow: hidden;
-			border: 10px solid black;
-		}
-		
-		#buttons {
-			position: relative;
-			margin: 0 auto;
-			height: 22px;
-			z-index: 1;
-			text-align: center;
-			background: rgba(255, 255, 255, 0.7);
-		}
-		
-		.image {
-			position: relative;
-		}
-		</style>
-		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js" type="text/javascript"></script>
-		<script type="text/javascript">
-		/*
-		 * Plugin Name: Resize Image to Parent Container
-		 *
-		 * Author: Christian Varga
-		 * Author URI: http://christianvarga.com
-		 *
-		 */
+  <head>
+    <style type="text/css">
+      #wideContainer {
+        position: relative;
+        margin: 20px auto;
+        max-width: 800px;
+        height: 200px;
+        border: 10px solid black;
+      }
+      
+      #tallContainer {
+        position: relative;
+        margin: 50px auto;
+        max-width: 400px;
+        height: 800px;
+        border: 10px solid black;
+      }
+      
+      #buttons {
+        position: relative;
+        margin: 0 auto;
+        height: 22px;
+        z-index: 1;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.7);
+      }
+      
+      .image {
+        position: relative;
+      }
 
-		jQuery.fn.resizeToParent = function(options) {
-		 var defaults = {
-		  parent: 'div'
-		 }
+      .imageContainer {
+        overflow: hidden;
+      }
 
-		 var options = jQuery.extend(defaults, options);
+      .imageContainer.overflow {
+        overflow: visible;
+      }
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    /*
+     * Plugin Name: Resize Image to Parent Container
+     *
+     * Author: Christian Varga
+     * Author URI: http://christianvarga.com
+     * Plugin Source: https://github.com/levymetal/jquery-resize-image-to-parent/
+     *
+     */
 
-		 return this.each(function() {
-		  var o = options;
-		  var obj = jQuery(this);
-		  
-		  // bind to load of image
-		  obj.load(function() {
-		    // dimensions of the parent
-		    var parentWidth = obj.parents(o.parent).width();
-		    var parentHeight = obj.parents(o.parent).height();
+    (function($) {
+      $.fn.resizeToParent = function(opts) {
+        var defaults = {
+         parent: 'div'
+        }
 
-		    // dimensions of the image
-		    var imageWidth = obj.width();
-		    var imageHeight = obj.height();
+        var opts = $.extend(defaults, opts);
 
-		    // step 1 - calculate the percentage difference between image width and container width
-		    var diff = imageWidth / parentWidth;
+        function positionImage(obj) {
+          // reset image (in case we're calling this a second time, for example on resize)
+          obj.css({'width': '', 'height': '', 'margin-left': '', 'margin-top': ''});
 
-		    // step 2 - if height divided by difference is smaller than container height, resize by height. otherwise resize by width
-		    if ((imageHeight / diff) < parentHeight) {
-		     obj.css({'width': 'auto', 'height': parentHeight});
+          // dimensions of the parent
+          var parentWidth = obj.parents(opts.parent).width();
+          var parentHeight = obj.parents(opts.parent).height();
 
-		     // set image variables to new dimensions
-		     imageWidth = imageWidth / (imageHeight / parentHeight);
-		     imageHeight = parentHeight;
-		    }
-		    else {
-		     obj.css({'height': 'auto', 'width': parentWidth});
+          // dimensions of the image
+          var imageWidth = obj.width();
+          var imageHeight = obj.height();
 
-		     // set image variables to new dimensions
-		     imageWidth = parentWidth;
-		     imageHeight = imageHeight / diff;
-		    }
+          // step 1 - calculate the percentage difference between image width and container width
+          var diff = imageWidth / parentWidth;
 
-		    // step 3 - center image in container
-		    var leftOffset = (imageWidth - parentWidth) / -2;
-		    var topOffset = (imageHeight - parentHeight) / -2;
+          // step 2 - if height divided by difference is smaller than container height, resize by height. otherwise resize by width
+          if ((imageHeight / diff) < parentHeight) {
+           obj.css({'width': 'auto', 'height': parentHeight});
 
-		    obj.css({'left': leftOffset, 'top': topOffset});
-		  });
-		 });
-		}
-		
-		$(function() {
-			$('.image').resizeToParent();
-			
-			$('#showOverflow').click(function(e) {
-				e.preventDefault();
-				
-				$('.imageContainer').css({'overflow': 'visible'});
-			});
-			
-			$('#hideOverflow').click(function(e) {
-				e.preventDefault();
-				
-				$('.imageContainer').css({'overflow': 'hidden'});
-			});
-		});
-		</script>
-	</head>
-	<body>
-		<div id="content">
-			<div id="buttons">
-				<a href="#" id="showOverflow">Show Overflow</a>
-				<a href="#" id="hideOverflow">Hide Overflow</a>
-			</div>
-			<div id="wideContainer" class="imageContainer">
-				<img src="grange.jpg" class="image" />
-			</div>
-			<div id="tallContainer" class="imageContainer">
-				<img src="cat.jpg" class="image" />
-			</div>
-		</div>
-	</body>
+           // set image variables to new dimensions
+           imageWidth = imageWidth / (imageHeight / parentHeight);
+           imageHeight = parentHeight;
+          }
+          else {
+           obj.css({'height': 'auto', 'width': parentWidth});
+
+           // set image variables to new dimensions
+           imageWidth = parentWidth;
+           imageHeight = imageHeight / diff;
+          }
+
+          // step 3 - center image in container
+          var leftOffset = (imageWidth - parentWidth) / -2;
+          var topOffset = (imageHeight - parentHeight) / -2;
+
+          obj.css({'margin-left': leftOffset, 'margin-top': topOffset});
+        }
+
+        return this.each(function() {
+          var obj = $(this);
+
+          // hack to force ie to run the load function... ridiculous bug 
+          // http://stackoverflow.com/questions/7137737/ie9-problems-with-jquery-load-event-not-firing
+          obj.attr("src", obj.attr("src"));
+
+          // bind to load of image
+          obj.load(function() {
+            positionImage(obj);
+          });
+
+          // run the position function if the image is cached
+          if (this.complete) {
+            positionImage(obj);
+          }
+
+          // run the position function on window resize (to make it responsive)
+          $(window).on('resize', function() {
+            positionImage(obj);
+          });
+        });
+      }
+    })( jQuery );
+    
+    $(function() {
+      $('.image').resizeToParent();
+      
+      $('a', '#buttons').on('click', function(e) {
+        e.preventDefault();
+        
+        $('.imageContainer').toggleClass('overflow');
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <div id="content">
+      <div id="buttons">
+        <a href="#" id="showOverflow">Show Overflow</a>
+        <a href="#" id="hideOverflow">Hide Overflow</a>
+      </div>
+      <div id="wideContainer" class="imageContainer">
+        <img src="grange.jpg" class="image" />
+      </div>
+      <div id="tallContainer" class="imageContainer">
+        <img src="cat.jpg" class="image" />
+      </div>
+    </div>
+  </body>
 </html>
