@@ -12,8 +12,12 @@ The image needs to be positioned relatively or absolutely inside a wrapper eleme
 
 Then, simply call it on the image(s) you want resized, like so:
 
-    $('#myImage').resizeToParent();
+    $('.my-images').resizeToParent();
 
 If you want to target a specific parent to resize to, use the parent parameter:
 
-    $('#myImage').resizeToParent({parent: '.parentContainer'});
+    $('.my-images').resizeToParent({parent: '.parentContainer'});
+
+The images will automatically be resized on window resize. By default, the event will not fire more than once every 100 milliseconds to prevent lag on older machines and browsers that spam the resize event. If you want to adjust the resize delay, use the delay parameter:
+
+    $('.my-images').resizeToParent({delay: 10});

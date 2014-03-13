@@ -53,6 +53,19 @@
       obj.css({'margin-left': leftOffset, 'margin-top': topOffset});
     }
 
+    // run the position function on window resize (to make it responsive)
+    var tid;
+    var elems = this;
+
+    $(window).on('resize', function() {
+      clearTimeout(tid);
+      tid = setTimeout(function() {
+        elems.each(function() {
+          positionImage($(this));
+        });
+      }, opts.delay);
+    });
+
     return this.each(function() {
       var obj = $(this);
 
@@ -69,11 +82,6 @@
       if (this.complete) {
         positionImage(obj);
       }
-
-      // run the position function on window resize (to make it responsive)
-      $(window).on('resize', function() {
-        positionImage(obj);
-      });
     });
   }
 })( jQuery );
