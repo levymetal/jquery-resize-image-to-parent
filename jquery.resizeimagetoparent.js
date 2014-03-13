@@ -10,7 +10,8 @@
 (function($) {
   $.fn.resizeToParent = function(opts) {
     var defaults = {
-     parent: 'div'
+     parent: 'div',
+     delay: 100
     }
 
     var opts = $.extend(defaults, opts);
