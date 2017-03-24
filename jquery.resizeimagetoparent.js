@@ -10,8 +10,8 @@
 (function($) {
   $.fn.resizeToParent = function(opts) {
     var defaults = {
-     parent: 'div',
-     delay: 100
+      parent: 'div',
+      delay: 100
     }
 
     var opts = $.extend(defaults, opts);
@@ -33,18 +33,18 @@
 
       // step 2 - if height divided by difference is smaller than container height, resize by height. otherwise resize by width
       if ((imageHeight / diff) < parentHeight) {
-       obj.css({'width': 'auto', 'height': parentHeight});
+        obj.css({'width': 'auto', 'height': parentHeight});
 
-       // set image variables to new dimensions
-       imageWidth = imageWidth / (imageHeight / parentHeight);
-       imageHeight = parentHeight;
+        // set image variables to new dimensions
+        imageWidth = imageWidth / (imageHeight / parentHeight);
+        imageHeight = parentHeight;
       }
       else {
-       obj.css({'height': 'auto', 'width': parentWidth});
+        obj.css({'height': 'auto', 'width': parentWidth});
 
-       // set image variables to new dimensions
-       imageWidth = parentWidth;
-       imageHeight = imageHeight / diff;
+        // set image variables to new dimensions
+        imageWidth = parentWidth;
+        imageHeight = imageHeight / diff;
       }
 
       // step 3 - center image in container
