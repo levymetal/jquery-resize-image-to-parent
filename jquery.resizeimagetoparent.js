@@ -75,7 +75,7 @@
       obj.attr("src", obj.attr("src"));
 
       // bind to load of image
-      obj.load(function() {
+      obj.on('load', function() {
         positionImage(obj);
       });
 
