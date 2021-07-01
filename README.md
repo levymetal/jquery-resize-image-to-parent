@@ -1,12 +1,14 @@
-jquery-resize-image-to-parent
-=============================
+# jquery-resize-image-to-parent
 
 jQuery script to fill a parent container with an image without whitespace.
 
 This plugin emulates the `background-size: cover;` css property, using an img tag instead. Check out the demo to see it in action.
 
-Usage
------------
+## Do you need this plugin?
+
+A lot has changed on the web since this plugin was released. This effect can now be achieved with pure css using [object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit). Unless you're targetting legacy browsers, use `object-fit: cover`. Browser support for `object-fit` can be found [here](https://caniuse.com/object-fit).
+
+## Usage
 
 The image needs to be positioned relatively or absolutely inside a wrapper element which has the `overflow: hidden` css property set. For example:
 
